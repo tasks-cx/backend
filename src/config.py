@@ -14,9 +14,8 @@ def get_env(name):
 class Config:
 
     API_VERSION = get_env("API_VERSION")
-
+    HOST = get_env("HOST")
     MODE = get_env("MODE")
-
     DEBUG = get_env("DEBUG")
 
     # Mailgun config
