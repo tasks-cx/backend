@@ -24,6 +24,8 @@ class Config:
     MAILGUN_DEFAULT_USER = get_env("MAILGUN_DEFAULT_USER")
     MAILGUN_KEY = get_env("MAILGUN_KEY")
 
+    MONGO_USERNAME = get_env("MONGO_USERNAME")
+    MONGO_PASSWORD = get_env("MONGO_PASSWORD")
 
 class CeleryConf:
 
