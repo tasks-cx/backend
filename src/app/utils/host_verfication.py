@@ -8,9 +8,10 @@ class AuthorizeHost:
             result = dns.resolver.resolve(domain, 'TXT')
             answer_raw = result.chaining_result.answer.to_text()
             logging.info('Domain is exist with TXT record {}'.format(answer_raw))
-            return domain, "Domain verified"
+            return True
         except Exception as e:
             logging.error("Domain nont verified with {}".format(e))
+            return False 
 
     def verfiySingature(domain, prjDomin):
         try:
@@ -19,9 +20,10 @@ class AuthorizeHost:
             domainValue = answer_raw.split('=')
             if prjDomin == domainValue[1][:len(domainValue[1])-1] and prjDomin != "":
                 logging.info("Singature verfied")
-                return 200, "Singature verified"
+                return True
             else:
                 logging.info("Singature not verified")
-                return 500, "Singature not verfied"
+                return False
         except Exception as e:
             logging.error("Domain nont verified with {}".format(e))
+            return False
