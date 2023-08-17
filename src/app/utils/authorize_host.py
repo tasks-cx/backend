@@ -25,6 +25,3 @@ class AuthorizeHost:
                 return 500, "Singature not verfied"
         except Exception as e:
             logging.error("Domain nont verified with {}".format(e))
-
-print(AuthorizeHost.verfiyHost("dyte.dev"))
-print(AuthorizeHost.verfiySingature("dyte.dev","tasks.cx"))
