@@ -1,4 +1,5 @@
 from flask import make_response
+from config import *
 from datetime import datetime
 
 try:
@@ -9,13 +10,20 @@ except ImportError:
     except ImportError:
         raise ImportError
 
+global jsonParsingParam
+
+if Config.DEBUG:
+    jsonParsingParam = dict(separators=(',', ':'), indent=2, sort_keys=True)
+else:
+    jsonParsingParam = dict()
+
 class JSONEncoder(json.JSONEncoder):
 
     def default(self, o):
         global jsonParsingParam
         if getattr(o, 'to_json', None):
             return json.loads(o.to_json())
-        if isinstance(o, datetime.datetime):
+        if isinstance(o, datetime):
             return o.strftime("%Y-%m-%dT%H:%I:%S%z")
         return json.JSONEncoder.default(self, o)
 

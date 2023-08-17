@@ -1,9 +1,8 @@
+from celery import shared_task
 from config import *
-from lib import decode_id
-from app.jobs import celery
 import requests
 
-@celery.task
+@shared_task(ignore_result=True)
 def send_user_confirmation(data):
     response = requests.post("https://api.mailgun.net/v2/%s/messages" % Config.MAILGUN_DOMAIN,
         auth=("api", Config.MAILGUN_KEY),

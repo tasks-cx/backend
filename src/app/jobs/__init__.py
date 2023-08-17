@@ -1,19 +1,15 @@
-from celery import Celery
-celery = Celery(__name__, autofinalize=False)
+from celery import Celery, Task
+from flask import Flask
 
-
-def create_celery(app):
-    celery.config_from_object('config.CeleryConf')
-    TaskBase = celery.Task
-
-    class AppContextTask(TaskBase):
-        abstract = True
-
-        def __call__(self, *args, **kwargs):
+# RUN: celery --workdir src -A jobs worker --loglevel INFO
+def celery_init_app(app: Flask) -> Celery:
+    class FlaskTask(Task):
+        def __call__(self, *args: object, **kwargs: object) -> object:
             with app.app_context():
-                return TaskBase.__call__(self, *args, **kwargs)
+                return self.run(*args, **kwargs)
 
-    celery.Task = AppContextTask
-
-    # run finalize to process decorated tasks
-    celery.finalize()
+    celery_app = Celery(app.name, task_cls=FlaskTask)
+    celery_app.config_from_object(app.config["CELERY_CONFIG"])
+    celery_app.set_default()
+    app.extensions["celery"] = celery_app
+    return celery_app
