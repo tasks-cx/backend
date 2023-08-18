@@ -1,6 +1,6 @@
 import uuid
 
-from entities.host import Host
+from app.entities.host import Host
 
 class ProjectId:
     def __init__(self, raw_str):
