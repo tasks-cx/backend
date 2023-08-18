@@ -3,8 +3,6 @@ from flask import Flask
 
 from lib.security import before_request
 
-from app.models import db
-
 # Import blueprint(s)
 from app.api import register_apis
 from app.jobs import celery_init_app
