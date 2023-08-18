@@ -1,7 +1,8 @@
-from flask import Blueprint, request
+from flask import Blueprint, request, session
 from config import *
 from lib import jsonify
 from app.models.users import Users
+from jwt import encode
 
 auth = Blueprint('auth', __name__, url_prefix='/auth')
 
@@ -16,17 +17,28 @@ def generateUserToken():
 @auth.route('/verify', methods=['POST'])
 def verifyUserToken():
     data = request.get_json()
-    verified = Users.verify(data["email"], data["token"], data["username"])
+    uid = f"{data['username']}@{Config.HOST}"
+    verified = Users.verify(data["email"], data["token"])
     if not verified:
         return jsonify({'status': 'error', 'message': 'Unable to verify user'}), 400
     
-    existing = Users.findByUID(f"{data['username']}@{Config.HOST}")
+    existing = Users.findByUID(uid)
     if existing:
-        return jsonify({'status': 'success', 'auth_token': '<send_auth_token>'}), 200
+        session['user'] = str(existing["uid"])
+        payload_data = {
+            "sub": str(existing["uid"])
+        }
+        auth_token = encode(payload_data, Config.SESSION_SECRET, algorithm='HS256')
+        return jsonify({'status': 'success', 'auth_token': auth_token }), 200
     else:
         userId = Users.add({
-            "uid": f"{data['username']}@{Config.HOST}",
+            "uid": uid,
             "email": data["email"],
             "username": data["username"],
         })
-        return jsonify({'status': 'success', 'created': userId, 'auth_token': '<send_auth_token>'}), 200
+        session['user'] = str(userId)
+        payload_data = {
+            "sub": str(userId)
+        }
+        auth_token = encode(payload_data, Config.SESSION_SECRET, algorithm='HS256')
+        return jsonify({'status': 'success', 'created': userId, 'auth_token': auth_token}), 200

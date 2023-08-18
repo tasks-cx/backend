@@ -14,7 +14,7 @@ def create_app():
     app.config.from_object('config.Config')
 
     # Setup some secret
-    # app.secret_key = Config.SECRET_KEY
+    app.secret_key = Config.SESSION_SECRET
 
     # Initialize Celery provider
     celery_init_app(app)

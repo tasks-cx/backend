@@ -10,4 +10,7 @@ users = Blueprint('users', __name__, url_prefix=API_BASE + '/users')
 @users.route('/<id>', methods=['GET'])
 @authorized
 def userDetail(id):
-    return jsonify({'status': 'success', 'user': id }), 200
+    user = Users.findByUID(id)
+    if not user:
+        return jsonify({'status': 'error', 'message': 'User not found'}), 400
+    return jsonify({'status': 'success', 'user': user }), 200
