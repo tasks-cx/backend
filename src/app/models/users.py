@@ -15,12 +15,14 @@ class Users:
                 "email": email,
                 "token": token
             })
-            Users.send_token({ email, token})
+            Users.send_token(dict(email = email, token = token))
+            return True
 
         db.userTokens.update_one(
             { "_id": existing["_id"] }, 
             { "$set": { "token": token } }
         )
+        Users.send_token(dict(email = email, token = token))
         return True
 
     def add(data):
@@ -43,16 +45,17 @@ class Users:
             "email": email, 
             "token": token
         })
-        if not userToken or userToken["verified"]:
+        if not userToken or ("verified" in userToken and userToken["verified"]):
             return False
         db.userTokens.update_one({ "_id": userToken["_id"] }, { "$set": { "verified": True } })
         return True
 
     def send_token(user):
-        send_user_confirmation.delay({
+        data = {
             "to": user["email"],
             "from": f"noreply@{Config.MAILGUN_DOMAIN}",
             "subject": "Verify your email!",
             "text": f"Use the token {user['token']} to verify your email.",
             "html": f"Use the token <code>{user['token']}</code> to verify your email.",
-        })
+        }
+        send_user_confirmation.delay(data)
