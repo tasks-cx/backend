@@ -6,6 +6,6 @@ class Projects:
         return None if not project_id else project_id
     
     def list():
-        projects = db.projects.find()
+        projects = db.projects.find().limit(100)
         return [p for p in projects]
 

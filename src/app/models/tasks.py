@@ -9,5 +9,5 @@ class Tasks:
     def list(project_id):
         tasks = db.tasks.find({
             'project_id': project_id
-        })
+        }).limit(100)
         return [t for t in tasks]

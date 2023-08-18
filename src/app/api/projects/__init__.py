@@ -16,6 +16,7 @@ def createProject():
     return jsonify({'status': 'success', 'project_id': project_id }), 200
 
 @projects.route('/', methods=['GET'])
+@authorized
 def projectList():
     all_projects = Projects.list()
     # send_user_confirmation.delay(all_projects)

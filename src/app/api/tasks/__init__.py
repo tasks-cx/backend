@@ -16,6 +16,7 @@ def createTask():
     return jsonify({'status': 'success', 'task_id': task_id }), 200
 
 @tasks.route('/', methods=['GET'])
+@authorized
 def taskList():
     all_tasks = Tasks.list()
     return jsonify({'status': 'success', 'task': all_tasks }), 200
