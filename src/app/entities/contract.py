@@ -29,4 +29,4 @@ class Contract:
 
 
     def __str__(self):
-        return f'Person(uuid: {self.uuid.hex}, project_id: {self.project_id}, member_id: {self.member_id}, sign: {self.sign}, expiry: {self.expiry}, witness: {self.witness}, access: {self.access})'
+        return f'Contract(uuid: {self.uuid.hex}, project_id: {self.project_id}, member_id: {self.member_id}, sign: {self.sign}, expiry: {self.expiry}, witness: {self.witness}, access: {self.access})'
