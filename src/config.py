@@ -17,6 +17,7 @@ class Config:
     HOST = get_env("HOST")
     MODE = get_env("MODE")
     DEBUG = get_env("DEBUG")
+    SESSION_SECRET = get_env("SESSION_SECRET")
 
     # Mailgun config
     MAILGUN_DOMAIN = get_env("MAILGUN_DOMAIN")

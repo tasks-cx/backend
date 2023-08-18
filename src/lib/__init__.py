@@ -1,5 +1,6 @@
 from flask import make_response
 from config import *
+from bson import ObjectId
 from datetime import datetime
 
 try:
@@ -25,6 +26,8 @@ class JSONEncoder(json.JSONEncoder):
             return json.loads(o.to_json())
         if isinstance(o, datetime):
             return o.strftime("%Y-%m-%dT%H:%I:%S%z")
+        if isinstance(o, ObjectId):
+            return str(o)
         return json.JSONEncoder.default(self, o)
 
 def jsonify(args):

@@ -33,21 +33,20 @@ class Users:
         return None if not user_id else data['uid']
     
     def list():
-        users = db.users.find().limit(100)
+        users = db.users.find({}, {'_id': 0}).limit(100)
         return [u for u in users]
     
     def findByUID(uid):
-        user = db.users.find_one({ "uid": uid })
+        user = db.users.find_one({ "uid": uid }, {'_id': 0})
         return user
     
-    def verify(email, token, username):
+    def verify(email, token):
         userToken = db.userTokens.find_one({ 
             "email": email, 
             "token": token
         })
-        if not userToken or ("verified" in userToken and userToken["verified"]):
-            return False
-        db.userTokens.update_one({ "_id": userToken["_id"] }, { "$set": { "verified": True } })
+        if userToken and ("verified" not in userToken or userToken["verified"] is False):
+            db.userTokens.update_one({ "_id": userToken["_id"] }, { "$set": { "verified": True } })
         return True
 
     def send_token(user):
